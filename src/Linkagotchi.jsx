@@ -91,51 +91,54 @@ export default function Linkagotchi({ contract, account }) {
   }
 
   return (
-    <div className="linkagotchi-container nes-container with-title">
-      <h1 className="title">Linkagotchi</h1>
-      <div className="linkagotchi-content nes-container is-rounded">
-        <div className="linkagotchi-menu">
-          <button className="nes-btn is-primary">Ranking</button>
-          <span>Game balance: {parseFloat(gameBalance).toFixed(2)} ETH</span>
-          <span style={{ color: 'red' }}>{account.slice(0,6)}...{account.slice(-4)}</span>
-        </div>
-        
-        {blockagotchi ? (
-          <>
-            <h2>{blockagotchi.name}</h2>
-            <div className="linkagotchi-info">
-              <p>ID: {blockagotchi.id}</p>
-              <p>Stage: {blockagotchi.stage}</p>
-              <p>Race: {blockagotchi.race}</p>
-              <p>Experience: {blockagotchi.experience}</p>
-              <p>Happiness: {blockagotchi.happiness}</p>
-              <p>Health: {blockagotchi.health}</p>
-            </div>
-            <div className="linkagotchi-actions">
-              <button className="nes-btn" onClick={() => performAction('feed')}>Feed</button>
-              <button className="nes-btn" onClick={() => performAction('bathe')}>Bathe</button>
-              <button className="nes-btn" onClick={() => performAction('fly')}>Fly</button>
-              <button className="nes-btn" onClick={() => performAction('run')}>Run</button>
-              <button className="nes-btn" onClick={() => performAction('climb')}>Climb</button>
-            </div>
-          </>
-        ) : (
-          <div className="linkagotchi-create">
-            <h2>Create a blockagotchi</h2>
-            <div className="nes-field">
-              <label htmlFor="name_field">Name</label>
-              <input
-                type="text"
-                id="name_field"
-                className="nes-input"
-                placeholder="Insert a name"
-                value={newBlockagotchiName}
-                onChange={(e) => setNewBlockagotchiName(e.target.value)}
-              />
-            </div>
-            <button className="nes-btn is-primary" onClick={createBlockagotchi}>Create</button>
+    <div className="linkagotchi-wrapper">
+      <h1 className="linkagotchi-main-title">Linkagotchi</h1>
+      <div className="nes-container with-title is-centered">
+        <p className="title">Linkagotchi</p>
+        <div className="nes-container is-rounded">
+          <div className="linkagotchi-menu">
+            <button className="nes-btn is-primary">Ranking</button>
+            <span>Game balance: {parseFloat(gameBalance).toFixed(2)} ETH</span>
+            <span className="wallet-address">{account.slice(0,6)}...{account.slice(-4)}</span>
           </div>
-        )}
+          
+          {blockagotchi ? (
+            <>
+              <h2 className="blockagotchi-name">{blockagotchi.name}</h2>
+              <div className="linkagotchi-info">
+                <p>ID: {blockagotchi.id}</p>
+                <p>Stage: {blockagotchi.stage}</p>
+                <p>Race: {blockagotchi.race}</p>
+                <p>Experience: {blockagotchi.experience}</p>
+                <p>Happiness: {blockagotchi.happiness}</p>
+                <p>Health: {blockagotchi.health}</p>
+              </div>
+              <div className="linkagotchi-actions">
+                <button className="nes-btn" onClick={() => performAction('feed')}>Feed</button>
+                <button className="nes-btn" onClick={() => performAction('bathe')}>Bathe</button>
+                <button className="nes-btn" onClick={() => performAction('fly')}>Fly</button>
+                <button className="nes-btn" onClick={() => performAction('run')}>Run</button>
+                <button className="nes-btn" onClick={() => performAction('climb')}>Climb</button>
+              </div>
+            </>
+          ) : (
+            <div className="linkagotchi-create">
+              <h2>Create a blockagotchi</h2>
+              <div className="nes-field">
+                <label htmlFor="name_field">Name</label>
+                <input
+                  type="text"
+                  id="name_field"
+                  className="nes-input"
+                  placeholder="Insert a name"
+                  value={newBlockagotchiName}
+                  onChange={(e) => setNewBlockagotchiName(e.target.value)}
+                />
+              </div>
+              <button className="nes-btn is-primary" onClick={createBlockagotchi}>Create</button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

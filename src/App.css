@@ -1,16 +1,12 @@
-.linkagotchi-container {
+.linkagotchi-wrapper {
   max-width: 800px;
   margin: 0 auto;
-}
-
-.linkagotchi-header {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.linkagotchi-content {
-  border: 4px solid #000;
   padding: 20px;
+}
+
+.linkagotchi-main-title {
+  text-align: left;
+  margin-bottom: 20px;
 }
 
 .linkagotchi-menu {
@@ -20,26 +16,42 @@
   margin-bottom: 20px;
 }
 
+.wallet-address {
+  color: red;
+}
+
+.blockagotchi-name {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
 .linkagotchi-info {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
+  margin-bottom: 20px;
 }
 
 .linkagotchi-actions {
   display: flex;
   justify-content: space-between;
-  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.linkagotchi-actions .nes-btn {
+  margin: 5px;
+  flex: 1;
+  min-width: 80px;
 }
 
 .linkagotchi-create {
-  margin-top: 20px;
+  text-align: center;
 }
 
-.nes-btn {
-  margin: 5px;
+.linkagotchi-create .nes-input {
+  margin-bottom: 20px;
 }
 
-.nes-input {
+.nes-container {
   margin-bottom: 20px;
 }
