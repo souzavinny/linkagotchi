@@ -3,6 +3,8 @@ import { ethers } from 'ethers';
 import 'nes.css/css/nes.min.css';
 import blobSprite from '../src/assets/blockagotchis/Bird.png';
 import BlockagotchiRanking from './BlockagotchiRanking';
+import LoadingScreen from './loading-screen-component';
+import CustomAlert from './custom-alert-component';
 
 export default function Linkagotchi({ contract, account }) {
     const [blockagotchi, setBlockagotchi] = useState(null);
@@ -11,6 +13,7 @@ export default function Linkagotchi({ contract, account }) {
     const [gameBalance, setGameBalance] = useState('0.00');
     const [animationState, setAnimationState] = useState('idle');
     const [showRanking, setShowRanking] = useState(false);
+    const [alert, setAlert] = useState(null);
   
     useEffect(() => {
       if (contract && account) {
@@ -59,48 +62,63 @@ export default function Linkagotchi({ contract, account }) {
     return blobSprite;
   };
 
+  const getStageString = (stage) => {
+    const stages = ['Blob', 'Child', 'Teen', 'Adult', 'Old'];
+    return stages[stage] || 'Unknown';
+  };
+
   const createBlockagotchi = async () => {
     if (!newBlockagotchiName) {
-      alert("Please enter a name for your Blockagotchi");
+      setAlert({message : "Please enter a name for your Blockagotchi"});
       return;
     }
     setLoading(true);
     try {
       const tx = await contract.createBlockagotchi(account, newBlockagotchiName);
       await tx.wait();
-      alert("Blockagotchi created! Waiting for it to hatch...");
+      setAlert({message : "Blockagotchi created! Waiting for it to hatch..."});
       setNewBlockagotchiName('');
       setTimeout(loadActiveBlockagotchi, 5000);
     } catch (error) {
       console.error("Failed to create Blockagotchi:", error);
-      alert("Failed to create Blockagotchi. Please try again.");
+      setAlert({message : "Failed to create Blockagotchi. Please try again."});
     }
     setLoading(false);
+  };
+
+  const getRaceString = (race) => {
+    const races = [
+      'None',   // 0
+      'Bird',   // 1
+      'Dog',    // 2
+      'Cat',    // 3
+      'Eagle',  // 4
+      'Wolf',   // 5
+      'Tiger'   // 6
+    ];
+    return races[race] || 'Unknown';
   };
 
   const performAction = async (actionType) => {
     if (!blockagotchi) {
-      alert("No active Blockagotchi to perform action on!");
+      setAlert({ message: "No active Blockagotchi to perform action on!", type: 'error' });
       return;
     }
-    setAnimationState(actionType);
     setLoading(true);
     try {
       const tx = await contract.performAction(blockagotchi.id, actionType);
       await tx.wait();
-      alert(`Action ${actionType} performed successfully!`);
+      setAlert({ message: `Action ${actionType} performed successfully!`, type: 'info' });
       await loadActiveBlockagotchi();
     } catch (error) {
       console.error(`Failed to perform action ${actionType}:`, error);
-      alert(`Failed to perform action ${actionType}. Please try again.`);
+      setAlert({ message: `Failed to perform action ${actionType}. Please try again.`, type: 'error' });
     }
     setLoading(false);
-    // Reset animation state after a delay
-    setTimeout(() => setAnimationState('idle'), 2000);
   };
 
   if (loading) {
-    return <div className="nes-container">Loading...</div>;
+    return <LoadingScreen />;
   }
 
   return (
@@ -131,8 +149,8 @@ export default function Linkagotchi({ contract, account }) {
               </div>
               <div className="linkagotchi-info">
                 <p>ID: {blockagotchi.id}</p>
-                <p>Stage: {blockagotchi.stage}</p>
-                <p>Race: {blockagotchi.race}</p>
+                <p>Stage: {getStageString(blockagotchi.stage)}</p>
+                <p>Race: {getRaceString(blockagotchi.race)}</p>
                 <p>Experience: {blockagotchi.experience}</p>
                 <p>Happiness: {blockagotchi.happiness}</p>
                 <p>Health: {blockagotchi.health}</p>
@@ -162,6 +180,13 @@ export default function Linkagotchi({ contract, account }) {
               <button className="nes-btn is-primary" onClick={createBlockagotchi}>Create</button>
             </div>
           )}
+          {alert && (
+        <CustomAlert
+          message={alert.message}
+          type={alert.type}
+          onClose={() => setAlert(null)}
+        />
+      )}
         </div>
       </div>
       )}

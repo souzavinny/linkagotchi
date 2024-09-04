@@ -143,3 +143,49 @@
 .nes-table tr:nth-child(even) {
   background-color: #f0f0f0;
 }
+
+.loading-screen {
+  max-width: 600px;
+  margin: 20px auto;
+  text-align: center;
+}
+
+.loading-screen p {
+  margin-bottom: 20px;
+}
+
+.loading-screen .nes-progress {
+  margin-top: 20px;
+}
+
+.custom-alert-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.custom-alert {
+  background-color: white;
+  max-width: 80%;
+  width: 400px;
+  text-align: center;
+}
+
+.custom-alert-content {
+  padding: 20px;
+}
+
+.custom-alert p {
+  margin-bottom: 20px;
+}
+
+.custom-alert button {
+  min-width: 100px;
+}
