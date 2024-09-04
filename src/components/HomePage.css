@@ -56,3 +56,41 @@
     display: flex;
     gap: 10px;
   }
+
+  .linkagotchi-sprites-banner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .sprite-container {
+    width: 64px;
+    height: 64px;
+    overflow: hidden;
+  }
+  
+  .linkagotchi-sprite {
+    width: 256px; /* 4 frames * 64px width */
+    height: 64px;
+    animation: idle-animation 1s steps(4) infinite;
+  }
+  
+  @keyframes idle-animation {
+    from { transform: translateX(0); }
+    to { transform: translateX(-100%); }
+  }
+  
+  /* Ajuste o tempo de animação para cada sprite para criar um efeito escalonado */
+  .bird-sprite {
+    animation-delay: 0s;
+  }
+  
+  .cat-sprite {
+    animation-delay: 0.3s;
+  }
+  
+  .dog-sprite {
+    animation-delay: 0.6s;
+  }
