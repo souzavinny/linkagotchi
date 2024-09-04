@@ -1,3 +1,4 @@
+/* Layout geral */
 .linkagotchi-wrapper {
   max-width: 800px;
   margin: 0 auto;
@@ -9,6 +10,7 @@
   margin-bottom: 20px;
 }
 
+/* Menu e informações */
 .linkagotchi-menu {
   display: flex;
   justify-content: space-between;
@@ -32,6 +34,7 @@
   margin-bottom: 20px;
 }
 
+/* Ações e criação */
 .linkagotchi-actions {
   display: flex;
   justify-content: space-between;
@@ -52,78 +55,51 @@
   margin-bottom: 20px;
 }
 
+/* Containers NES */
 .nes-container {
   margin-bottom: 20px;
 }
 
+/* Sprite e animações */
 .blockagotchi-sprite-container {
-  width: 64px;  /* Ajuste conforme o tamanho real do seu sprite */
-  height: 64px; /* Ajuste conforme o tamanho real do seu sprite */
+  width: 64px;
+  height: 64px;
   margin: 20px auto;
   overflow: hidden;
 }
 
 .blockagotchi-sprite {
-  width: 100%;
-  height: 100%;
+  width: 64px; /* 4 frames * 32px width */
+  height: 64px;
+  background-repeat: no-repeat;
   background-size: 400% 100%;
-  animation: idle-animation 1s steps(2) infinite;
 }
 
-.blockagotchi-sprite.idle {
-  animation: idle-animation 1s steps(2) infinite;
+@keyframes custom-sprite-idle {
+  0%, 50% { background-position: 0 0; }
+  50.01%, 100% { background-position: -128px 0; }
 }
 
-.blockagotchi-sprite.feed {
-  animation: feed-animation 0.5s steps(4) infinite;
+@keyframes custom-sprite-move {
+  0%, 50% { background-position: 0 0; }
+  50.01%, 100% { background-position: -32px 0; }
 }
 
-.blockagotchi-sprite.bathe {
-  animation: bathe-animation 0.5s steps(4) infinite;
+@keyframes custom-sprite-climb {
+  0%, 50% { background-position: 0 0; }
+  50.01%, 100% { background-position: -64px 0; }
 }
 
-.blockagotchi-sprite.fly {
-  animation: fly-animation 0.5s steps(4) infinite;
+@keyframes custom-sprite-bathe {
+  0%, 100% { background-position: -128px 0; }
 }
 
-.blockagotchi-sprite.run {
-  animation: run-animation 0.5s steps(4) infinite;
-}
+.blockagotchi-sprite.idle { animation: custom-sprite-idle 1s steps(2) infinite; }
+.blockagotchi-sprite.move { animation: custom-sprite-move 0.5s steps(2) infinite; }
+.blockagotchi-sprite.climb { animation: custom-sprite-climb 0.5s infinite; }
+.blockagotchi-sprite.bathe { animation: custom-sprite-bathe 0.5s infinite; }
 
-.blockagotchi-sprite.climb {
-  animation: climb-animation 0.5s steps(4) infinite;
-}
-
-@keyframes idle-animation {
-  0% { background-position: 0% 0; }
-  100% { background-position: 66.66% 0; }
-}
-
-@keyframes feed-animation {
-  0% { background-position: 0% 0; }
-  100% { background-position: -300% 0; }
-}
-
-@keyframes bathe-animation {
-  0% { background-position: -100% 0; }
-  100% { background-position: -400% 0; }
-}
-
-@keyframes fly-animation {
-  0% { background-position: 0% 0; }
-  100% { background-position: -300% 0; }
-}
-
-@keyframes run-animation {
-  0% { background-position: -100% 0; }
-  100% { background-position: -400% 0; }
-}
-
-@keyframes climb-animation {
-  0% { background-position: 0% 0; }
-  100% { background-position: -300% 0; }
-}
-
+/* Tabela de ranking */
 .nes-table {
   width: 100%;
   border-collapse: collapse;
@@ -144,6 +120,7 @@
   background-color: #f0f0f0;
 }
 
+/* Tela de carregamento */
 .loading-screen {
   max-width: 600px;
   margin: 20px auto;
@@ -158,6 +135,7 @@
   margin-top: 20px;
 }
 
+/* Alerta customizado */
 .custom-alert-overlay {
   position: fixed;
   top: 0;
@@ -180,6 +158,9 @@
 
 .custom-alert-content {
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .custom-alert p {
@@ -188,4 +169,13 @@
 
 .custom-alert button {
   min-width: 100px;
+}
+
+@keyframes custom-sprite-evolve {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+.blockagotchi-sprite.evolving {
+  animation: custom-sprite-evolve 1s infinite !important;
 }

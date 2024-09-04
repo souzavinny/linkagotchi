@@ -22,14 +22,13 @@ export default function Linkagotchi({ contract, account }) {
       }
     }, [contract, account]);
 
-  const loadActiveBlockagotchi = async () => {
-    setLoading(true);
-    try {
-      const activeBlockagotchiId = await contract.activeBlockagotchi(account);
-      const blockagotchiData = await contract.blockagotchis(activeBlockagotchiId);
-      
-      if (blockagotchiData.isActive) {
-        setBlockagotchi({
+    const loadActiveBlockagotchi = async () => {
+      setLoading(true);
+      try {
+        const activeBlockagotchiId = await contract.activeBlockagotchi(account);
+        const blockagotchiData = await contract.blockagotchis(activeBlockagotchiId);
+        
+        const updatedBlockagotchi = {
           id: activeBlockagotchiId.toNumber(),
           name: blockagotchiData.name,
           stage: blockagotchiData.stage,
@@ -37,16 +36,18 @@ export default function Linkagotchi({ contract, account }) {
           experience: blockagotchiData.experience.toNumber(),
           happiness: blockagotchiData.happiness.toNumber(),
           health: blockagotchiData.health.toNumber(),
-        });
-      } else {
+        };
+        console.log("RACA : " + updatedBlockagotchi.race);
+        setBlockagotchi(updatedBlockagotchi);
+        setLoading(false);
+        return updatedBlockagotchi;
+      } catch (error) {
+        console.error("Failed to load active Blockagotchi:", error);
         setBlockagotchi(null);
+        setLoading(false);
+        return null;
       }
-    } catch (error) {
-      console.error("Failed to load active Blockagotchi:", error);
-      setBlockagotchi(null);
-    }
-    setLoading(false);
-  };
+    };
 
   const fetchBalance = async () => {
     if (window.ethereum) {
@@ -56,10 +57,20 @@ export default function Linkagotchi({ contract, account }) {
     }
   };
 
-  const getBlockagotchiSprite = (stage, race) => {
-    // Lógica para selecionar o sprite correto baseado no estágio e raça
-    // Por enquanto, vamos usar o blob para todos
-    return blobSprite;
+  const getBlockagotchiSprite = (race) => {
+    console.log(race);
+    const raceSprites = {
+      0: 'Bird.png',
+      1: 'Bird.png',
+      2: 'Dog.png',
+      3: 'Cat.png',
+      4: 'Duck.png', // Assumindo que Duck é Eagle no seu enum
+      5: 'Wolf.png',
+      6: 'Tiger.png',
+      7: 'Lion.png'  // Caso você queira incluir Lion também
+    };
+  
+    return `/src/assets/blockagotchis/${raceSprites[race] || 'blobSprite.png'}`;
   };
 
   const getStageString = (stage) => {
@@ -67,21 +78,38 @@ export default function Linkagotchi({ contract, account }) {
     return stages[stage] || 'Unknown';
   };
 
+  const getActionAnimation = (action) => {
+    switch (action) {
+      case 'feed':
+        return 'idle';
+      case 'walk':
+      case 'fly':
+      case 'run':
+        return 'move';
+      case 'climb':
+        return 'climb';
+      case 'bathe':
+        return 'bathe';
+      default:
+        return 'idle';
+    }
+  };
+
   const createBlockagotchi = async () => {
     if (!newBlockagotchiName) {
-      setAlert({message : "Please enter a name for your Blockagotchi"});
+      setAlert({message: "Please enter a name for your Blockagotchi", type: 'error'});
       return;
     }
     setLoading(true);
     try {
       const tx = await contract.createBlockagotchi(account, newBlockagotchiName);
       await tx.wait();
-      setAlert({message : "Blockagotchi created! Waiting for it to hatch..."});
+      setAlert({message: "Blockagotchi created! Waiting for it to hatch...", type: 'success'});
       setNewBlockagotchiName('');
       setTimeout(loadActiveBlockagotchi, 5000);
     } catch (error) {
       console.error("Failed to create Blockagotchi:", error);
-      setAlert({message : "Failed to create Blockagotchi. Please try again."});
+      setAlert({message: "Failed to create Blockagotchi. Please try again.", type: 'error'});
     }
     setLoading(false);
   };
@@ -108,8 +136,26 @@ export default function Linkagotchi({ contract, account }) {
     try {
       const tx = await contract.performAction(blockagotchi.id, actionType);
       await tx.wait();
-      setAlert({ message: `Action ${actionType} performed successfully!`, type: 'info' });
-      await loadActiveBlockagotchi();
+      
+      const updatedBlockagotchi = await loadActiveBlockagotchi();
+      
+      if (updatedBlockagotchi.stage !== blockagotchi.stage || updatedBlockagotchi.race !== blockagotchi.race) {
+        // Blockagotchi evoluiu
+        setAlert({
+          message: "What? Your Blockagotchi is evolving!",
+          type: 'evolution',
+          spriteUrl: getBlockagotchiSprite(updatedBlockagotchi.race),
+          action: 'evolve'
+        });
+      } else {
+        // Ação normal
+        setAlert({ 
+          message: `Action ${actionType} performed successfully!`, 
+          type: 'success',
+          spriteUrl: getBlockagotchiSprite(updatedBlockagotchi.race),
+          action: actionType
+        });
+      }
     } catch (error) {
       console.error(`Failed to perform action ${actionType}:`, error);
       setAlert({ message: `Failed to perform action ${actionType}. Please try again.`, type: 'error' });
@@ -128,67 +174,69 @@ export default function Linkagotchi({ contract, account }) {
         <BlockagotchiRanking contract={contract} onClose={() => setShowRanking(false)} />
       ) : (
         <div className="nes-container with-title is-centered">
-        <p className="title">Linkagotchi</p>
-        <div className="nes-container is-rounded">
-          <div className="linkagotchi-menu">
-            <button className="nes-btn is-primary" onClick={() => setShowRanking(true)}>Ranking</button>
-            <span>Game balance: {parseFloat(gameBalance).toFixed(2)} ETH</span>
-            <span className="wallet-address">{account.slice(0,6)}...{account.slice(-4)}</span>
-          </div>
-          
-          {blockagotchi ? (
-            <>
-              <h2 className="blockagotchi-name">{blockagotchi.name}</h2>
-              <div className="blockagotchi-sprite-container">
-                <div 
-                  className={`blockagotchi-sprite ${animationState}`}
-                  style={{
-                    backgroundImage: `url(${getBlockagotchiSprite(blockagotchi.stage, blockagotchi.race)})`,
-                  }}
-                />
-              </div>
-              <div className="linkagotchi-info">
-                <p>ID: {blockagotchi.id}</p>
-                <p>Stage: {getStageString(blockagotchi.stage)}</p>
-                <p>Race: {getRaceString(blockagotchi.race)}</p>
-                <p>Experience: {blockagotchi.experience}</p>
-                <p>Happiness: {blockagotchi.happiness}</p>
-                <p>Health: {blockagotchi.health}</p>
-              </div>
-              <div className="linkagotchi-actions">
-                <button className="nes-btn" onClick={() => performAction('feed')}>Feed</button>
-                <button className="nes-btn" onClick={() => performAction('bathe')}>Bathe</button>
-                <button className="nes-btn" onClick={() => performAction('fly')}>Fly</button>
-                <button className="nes-btn" onClick={() => performAction('run')}>Run</button>
-                <button className="nes-btn" onClick={() => performAction('climb')}>Climb</button>
-              </div>
-            </>
-          ) : (
-            <div className="linkagotchi-create">
-              <h2>Create a blockagotchi</h2>
-              <div className="nes-field">
-                <label htmlFor="name_field">Name</label>
-                <input
-                  type="text"
-                  id="name_field"
-                  className="nes-input"
-                  placeholder="Insert a name"
-                  value={newBlockagotchiName}
-                  onChange={(e) => setNewBlockagotchiName(e.target.value)}
-                />
-              </div>
-              <button className="nes-btn is-primary" onClick={createBlockagotchi}>Create</button>
+          <p className="title">Linkagotchi</p>
+          <div className="nes-container is-rounded">
+            <div className="linkagotchi-menu">
+              <button className="nes-btn is-primary" onClick={() => setShowRanking(true)}>Ranking</button>
+              <span>Game balance: {parseFloat(gameBalance).toFixed(2)} ETH</span>
+              <span className="wallet-address">{account.slice(0,6)}...{account.slice(-4)}</span>
             </div>
-          )}
-          {alert && (
-        <CustomAlert
-          message={alert.message}
-          type={alert.type}
-          onClose={() => setAlert(null)}
-        />
-      )}
+            
+            {blockagotchi ? (
+              <>
+                <h2 className="blockagotchi-name">{blockagotchi.name}</h2>
+                <div className="blockagotchi-sprite-container">
+                  <div 
+                    className={`blockagotchi-sprite ${animationState}`}
+                    style={{
+                      backgroundImage: `url(${getBlockagotchiSprite(blockagotchi.race)})`,
+                    }}
+                  />
+                </div>
+                <div className="linkagotchi-info">
+                  <p>ID: {blockagotchi.id}</p>
+                  <p>Stage: {getStageString(blockagotchi.stage)}</p>
+                  <p>Race: {getRaceString(blockagotchi.race)}</p>
+                  <p>Experience: {blockagotchi.experience}</p>
+                  <p>Happiness: {blockagotchi.happiness}</p>
+                  <p>Health: {blockagotchi.health}</p>
+                </div>
+                <div className="linkagotchi-actions">
+                  <button className="nes-btn" onClick={() => performAction('feed')}>Feed</button>
+                  <button className="nes-btn" onClick={() => performAction('bathe')}>Bathe</button>
+                  <button className="nes-btn" onClick={() => performAction('fly')}>Fly</button>
+                  <button className="nes-btn" onClick={() => performAction('run')}>Run</button>
+                  <button className="nes-btn" onClick={() => performAction('climb')}>Climb</button>
+                </div>
+              </>
+            ) : (
+              <div className="linkagotchi-create">
+                <h2>Create a blockagotchi</h2>
+                <div className="nes-field">
+                  <label htmlFor="name_field">Name</label>
+                  <input
+                    type="text"
+                    id="name_field"
+                    className="nes-input"
+                    placeholder="Insert a name"
+                    value={newBlockagotchiName}
+                    onChange={(e) => setNewBlockagotchiName(e.target.value)}
+                  />
+                </div>
+                <button className="nes-btn is-primary" onClick={createBlockagotchi}>Create</button>
+              </div>
+            )}
+            {alert && (
+  <CustomAlert
+    message={alert.message}
+    type={alert.type}
+    spriteUrl={alert.spriteUrl}
+    action={alert.action}
+    onClose={() => setAlert(null)}
+  />
+)}
+          </div>
         </div>
-      </div>
       )}
     </div>
   );
