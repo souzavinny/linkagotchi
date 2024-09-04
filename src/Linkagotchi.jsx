@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import 'nes.css/css/nes.min.css';
+import blobSprite from '../src/assets/blockagotchis/Bird.png';
 
 export default function Linkagotchi({ contract, account }) {
     const [blockagotchi, setBlockagotchi] = useState(null);
     const [newBlockagotchiName, setNewBlockagotchiName] = useState('');
     const [loading, setLoading] = useState(true);
     const [gameBalance, setGameBalance] = useState('0.00');
+    const [animationState, setAnimationState] = useState('idle');
   
     useEffect(() => {
       if (contract && account) {
@@ -49,6 +51,12 @@ export default function Linkagotchi({ contract, account }) {
     }
   };
 
+  const getBlockagotchiSprite = (stage, race) => {
+    // Lógica para selecionar o sprite correto baseado no estágio e raça
+    // Por enquanto, vamos usar o blob para todos
+    return blobSprite;
+  };
+
   const createBlockagotchi = async () => {
     if (!newBlockagotchiName) {
       alert("Please enter a name for your Blockagotchi");
@@ -73,6 +81,7 @@ export default function Linkagotchi({ contract, account }) {
       alert("No active Blockagotchi to perform action on!");
       return;
     }
+    setAnimationState(actionType);
     setLoading(true);
     try {
       const tx = await contract.performAction(blockagotchi.id, actionType);
@@ -84,6 +93,8 @@ export default function Linkagotchi({ contract, account }) {
       alert(`Failed to perform action ${actionType}. Please try again.`);
     }
     setLoading(false);
+    // Reset animation state after a delay
+    setTimeout(() => setAnimationState('idle'), 2000);
   };
 
   if (loading) {
@@ -105,6 +116,14 @@ export default function Linkagotchi({ contract, account }) {
           {blockagotchi ? (
             <>
               <h2 className="blockagotchi-name">{blockagotchi.name}</h2>
+              <div className="blockagotchi-sprite-container">
+                <div 
+                  className={`blockagotchi-sprite ${animationState}`}
+                  style={{
+                    backgroundImage: `url(${getBlockagotchiSprite(blockagotchi.stage, blockagotchi.race)})`,
+                  }}
+                />
+              </div>
               <div className="linkagotchi-info">
                 <p>ID: {blockagotchi.id}</p>
                 <p>Stage: {blockagotchi.stage}</p>

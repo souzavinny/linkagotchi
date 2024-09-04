@@ -55,3 +55,71 @@
 .nes-container {
   margin-bottom: 20px;
 }
+
+.blockagotchi-sprite-container {
+  width: 64px;  /* Ajuste conforme o tamanho real do seu sprite */
+  height: 64px; /* Ajuste conforme o tamanho real do seu sprite */
+  margin: 20px auto;
+  overflow: hidden;
+}
+
+.blockagotchi-sprite {
+  width: 100%;
+  height: 100%;
+  background-size: 400% 100%;
+  animation: idle-animation 1s steps(2) infinite;
+}
+
+.blockagotchi-sprite.idle {
+  animation: idle-animation 1s steps(2) infinite;
+}
+
+.blockagotchi-sprite.feed {
+  animation: feed-animation 0.5s steps(4) infinite;
+}
+
+.blockagotchi-sprite.bathe {
+  animation: bathe-animation 0.5s steps(4) infinite;
+}
+
+.blockagotchi-sprite.fly {
+  animation: fly-animation 0.5s steps(4) infinite;
+}
+
+.blockagotchi-sprite.run {
+  animation: run-animation 0.5s steps(4) infinite;
+}
+
+.blockagotchi-sprite.climb {
+  animation: climb-animation 0.5s steps(4) infinite;
+}
+
+@keyframes idle-animation {
+  0% { background-position: 0% 0; }
+  100% { background-position: 66.66% 0; }
+}
+
+@keyframes feed-animation {
+  0% { background-position: 0% 0; }
+  100% { background-position: -300% 0; }
+}
+
+@keyframes bathe-animation {
+  0% { background-position: -100% 0; }
+  100% { background-position: -400% 0; }
+}
+
+@keyframes fly-animation {
+  0% { background-position: 0% 0; }
+  100% { background-position: -300% 0; }
+}
+
+@keyframes run-animation {
+  0% { background-position: -100% 0; }
+  100% { background-position: -400% 0; }
+}
+
+@keyframes climb-animation {
+  0% { background-position: 0% 0; }
+  100% { background-position: -300% 0; }
+}
