@@ -8,13 +8,13 @@ export default function CustomAlert({ message, onClose, type = 'info', spriteUrl
       case 'idle':
         return 'custom-sprite-idle 1s steps(2) infinite';
       case 'move':
-        return 'custom-sprite-move 0.5s steps(2) infinite';
+        return 'custom-sprite-move 0.05s steps(2) infinite';
       case 'climb':
         return 'custom-sprite-climb 0.5s infinite';
       case 'bathe':
         return 'custom-sprite-bathe 0.5s infinite';
       default:
-        return 'custom-sprite-idle 1s steps(2) infinite';
+        return 'custom-sprite-idle 0.1s steps(2) infinite';
     }
   };
 

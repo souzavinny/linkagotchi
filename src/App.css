@@ -91,7 +91,8 @@
 }
 
 @keyframes custom-sprite-bathe {
-  0%, 100% { background-position: -128px 0; }
+  0%, 50% { background-position: 0 0; }
+  50.01%, 100% { background-position: -190px 0; }
 }
 
 .blockagotchi-sprite.idle { animation: custom-sprite-idle 1s steps(2) infinite; }
