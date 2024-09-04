@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import 'nes.css/css/nes.min.css';
 import blobSprite from '../src/assets/blockagotchis/Bird.png';
+import BlockagotchiRanking from './BlockagotchiRanking';
 
 export default function Linkagotchi({ contract, account }) {
     const [blockagotchi, setBlockagotchi] = useState(null);
@@ -9,6 +10,7 @@ export default function Linkagotchi({ contract, account }) {
     const [loading, setLoading] = useState(true);
     const [gameBalance, setGameBalance] = useState('0.00');
     const [animationState, setAnimationState] = useState('idle');
+    const [showRanking, setShowRanking] = useState(false);
   
     useEffect(() => {
       if (contract && account) {
@@ -104,11 +106,14 @@ export default function Linkagotchi({ contract, account }) {
   return (
     <div className="linkagotchi-wrapper">
       <h1 className="linkagotchi-main-title">Linkagotchi</h1>
-      <div className="nes-container with-title is-centered">
+      {showRanking ? (
+        <BlockagotchiRanking contract={contract} onClose={() => setShowRanking(false)} />
+      ) : (
+        <div className="nes-container with-title is-centered">
         <p className="title">Linkagotchi</p>
         <div className="nes-container is-rounded">
           <div className="linkagotchi-menu">
-            <button className="nes-btn is-primary">Ranking</button>
+            <button className="nes-btn is-primary" onClick={() => setShowRanking(true)}>Ranking</button>
             <span>Game balance: {parseFloat(gameBalance).toFixed(2)} ETH</span>
             <span className="wallet-address">{account.slice(0,6)}...{account.slice(-4)}</span>
           </div>
@@ -159,6 +164,7 @@ export default function Linkagotchi({ contract, account }) {
           )}
         </div>
       </div>
+      )}
     </div>
   );
 }
