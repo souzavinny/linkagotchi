@@ -26,6 +26,15 @@ export default function Linkagotchi({ contract, account }) {
       setLoading(true);
       try {
         const activeBlockagotchiId = await contract.activeBlockagotchi(account);
+        
+        // Verifica se o ID é 0
+        if (activeBlockagotchiId.toNumber() === 0) {
+          console.log("No active Blockagotchi found");
+          setBlockagotchi(null);
+          setLoading(false);
+          return null;
+        }
+    
         const blockagotchiData = await contract.blockagotchis(activeBlockagotchiId);
         
         const updatedBlockagotchi = {
@@ -37,7 +46,8 @@ export default function Linkagotchi({ contract, account }) {
           happiness: blockagotchiData.happiness.toNumber(),
           health: blockagotchiData.health.toNumber(),
         };
-        console.log("RACA : " + updatedBlockagotchi.race);
+        
+        console.log("RACA: " + updatedBlockagotchi.race);
         setBlockagotchi(updatedBlockagotchi);
         setLoading(false);
         return updatedBlockagotchi;
@@ -139,6 +149,11 @@ export default function Linkagotchi({ contract, account }) {
       
       const updatedBlockagotchi = await loadActiveBlockagotchi();
       
+      if (!updatedBlockagotchi) {
+        setAlert({ message: "Failed to load Blockagotchi after action", type: 'error' });
+        return;
+      }
+  
       if (updatedBlockagotchi.stage !== blockagotchi.stage || updatedBlockagotchi.race !== blockagotchi.race) {
         // Blockagotchi evoluiu
         setAlert({
