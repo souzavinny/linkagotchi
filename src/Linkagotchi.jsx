@@ -44,7 +44,7 @@ export default function Linkagotchi({ contract, account }) {
           experience: blockagotchiData.experience.toNumber(),
           happiness: blockagotchiData.happiness.toNumber(),
           health: blockagotchiData.health.toNumber(),
-          isShiny: blockagotchiData.isShiny // Adicionando a propriedade isShiny
+          isShiny: blockagotchiData.isShiny
         };
         
         console.log("RACA: " + updatedBlockagotchi.race + ", SHINY: " + updatedBlockagotchi.isShiny);
@@ -70,14 +70,14 @@ export default function Linkagotchi({ contract, account }) {
   const getBlockagotchiSprite = (race) => {
     console.log(race);
     const raceSprites = {
-      0: 'Bird.png',
+      0: 'blobSprite.png',
       1: 'Bird.png',
       2: 'Dog.png',
       3: 'Cat.png',
-      4: 'Duck.png', // Assumindo que Duck é Eagle no seu enum
+      4: 'Duck.png', 
       5: 'Wolf.png',
       6: 'Tiger.png',
-      7: 'Lion.png'  // Caso você queira incluir Lion também
+      7: 'Lion.png'  
     };
   
     return `/src/assets/blockagotchis/${raceSprites[race] || 'blobSprite.png'}`;
@@ -124,7 +124,7 @@ export default function Linkagotchi({ contract, account }) {
       
       while (!newBlockagotchi && attempts < maxAttempts) {
         attempts++;
-        await new Promise(resolve => setTimeout(resolve, 10000)); // Espera 3 segundos entre tentativas
+        await new Promise(resolve => setTimeout(resolve, 10000)); // Espera 10 segundos entre tentativas
         newBlockagotchi = await loadActiveBlockagotchi();
         
         if (newBlockagotchi && newBlockagotchi.name === newBlockagotchiName) {
@@ -192,7 +192,7 @@ export default function Linkagotchi({ contract, account }) {
       if (updatedBlockagotchi.stage !== blockagotchi.stage || updatedBlockagotchi.race !== blockagotchi.race) {
         // Blockagotchi evoluiu
         setAlert({
-          message: "What? Your Blockagotchi is evolving!",
+          message: "Congratulations! Your Blockagotchi evolved!",
           type: 'evolution',
           spriteUrl: getBlockagotchiSprite(updatedBlockagotchi.race),
           action: 'evolve',
