@@ -26,7 +26,7 @@ Linkagotchi is a blockchain-based virtual pet game inspired by the classic Tamag
 
 ### Prerequisites
 
-- Node.js (v14.0.0 or later)
+- Node.js (v18.0.0 or later)
 - npm (v6.0.0 or later)
 - MetaMask browser extension
 - Ethereum testnet account (e.g., Sepolia) with test ETH
@@ -44,15 +44,9 @@ Linkagotchi is a blockchain-based virtual pet game inspired by the classic Tamag
    npm install
    ```
 
-3. Create a `.env` file in the root directory and add your environment variables:
+3. Start the development server:
    ```
-   REACT_APP_CONTRACT_ADDRESS=your_contract_address
-   REACT_APP_INFURA_PROJECT_ID=your_infura_project_id
-   ```
-
-4. Start the development server:
-   ```
-   npm start
+   yarn dev
    ```
 
 ## Usage
@@ -62,6 +56,7 @@ Linkagotchi is a blockchain-based virtual pet game inspired by the classic Tamag
 3. Perform actions like feeding, bathing, and training to raise your Blockagotchi
 4. Watch your Blockagotchi evolve as it gains experience
 5. Explore Blockagotchi Market (coming soon)
+6. Explore Blockagotchi Rankings
 
 ## Smart Contract
 
@@ -70,9 +65,8 @@ The Linkagotchi smart contract is deployed on the Ethereum testnet (Sepolia). It
 Key functions:
 - `createBlockagotchi`: Create a new Blockagotchi
 - `performAction`: Perform an action on your Blockagotchi
-- `evolveBlockagotchi`: Evolve your Blockagotchi to the next stage
 
-For more details, check the `Linkagotchi.sol` file in the `contracts` directory.
+For more details, check the `Linkagotchi.sol` file in the `contract` directory.
 
 ## Frontend
 
