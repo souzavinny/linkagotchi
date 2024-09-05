@@ -27,7 +27,6 @@ export default function Linkagotchi({ contract, account }) {
       try {
         const activeBlockagotchiId = await contract.activeBlockagotchi(account);
         
-        // Verifica se o ID é 0
         if (activeBlockagotchiId.toNumber() === 0) {
           console.log("No active Blockagotchi found");
           setBlockagotchi(null);
@@ -45,9 +44,10 @@ export default function Linkagotchi({ contract, account }) {
           experience: blockagotchiData.experience.toNumber(),
           happiness: blockagotchiData.happiness.toNumber(),
           health: blockagotchiData.health.toNumber(),
+          isShiny: blockagotchiData.isShiny // Adicionando a propriedade isShiny
         };
         
-        console.log("RACA: " + updatedBlockagotchi.race);
+        console.log("RACA: " + updatedBlockagotchi.race + ", SHINY: " + updatedBlockagotchi.isShiny);
         setBlockagotchi(updatedBlockagotchi);
         setLoading(false);
         return updatedBlockagotchi;
@@ -107,19 +107,54 @@ export default function Linkagotchi({ contract, account }) {
 
   const createBlockagotchi = async () => {
     if (!newBlockagotchiName) {
-      setAlert({message: "Please enter a name for your Blockagotchi", type: 'error'});
+      setAlert({ message: "Please enter a name for your Blockagotchi", type: 'error' });
       return;
     }
     setLoading(true);
     try {
+      setAlert({ message: "Creating your Blockagotchi... This may take a moment.", type: 'info' });
+      
       const tx = await contract.createBlockagotchi(account, newBlockagotchiName);
       await tx.wait();
-      setAlert({message: "Blockagotchi created! Waiting for it to hatch...", type: 'success'});
-      setNewBlockagotchiName('');
-      setTimeout(loadActiveBlockagotchi, 5000);
+      
+      // Espera adicional e verificação
+      let newBlockagotchi = null;
+      let attempts = 0;
+      const maxAttempts = 10;
+      
+      while (!newBlockagotchi && attempts < maxAttempts) {
+        attempts++;
+        await new Promise(resolve => setTimeout(resolve, 10000)); // Espera 3 segundos entre tentativas
+        newBlockagotchi = await loadActiveBlockagotchi();
+        
+        if (newBlockagotchi && newBlockagotchi.name === newBlockagotchiName) {
+          break; // Blockagotchi encontrado
+        }
+      }
+      
+      if (newBlockagotchi && newBlockagotchi.name === newBlockagotchiName) {
+        if (newBlockagotchi.isShiny) {
+          setAlert({
+            message: "Congratulations! You hatched a shiny Blockagotchi!",
+            type: 'shiny',
+            spriteUrl: getBlockagotchiSprite(newBlockagotchi.race),
+            action: 'shiny'
+          });
+        } else {
+          setAlert({ 
+            message: "Blockagotchi created successfully!", 
+            type: 'success',
+            spriteUrl: getBlockagotchiSprite(newBlockagotchi.race),
+            action: 'idle'
+          });
+        }
+        setNewBlockagotchiName('');
+      } else {
+        setAlert({ message: "Blockagotchi creation confirmed, but not yet visible. Please check again in a moment.", type: 'warning' });
+      }
     } catch (error) {
       console.error("Failed to create Blockagotchi:", error);
-      setAlert({message: "Failed to create Blockagotchi. Please try again.", type: 'error'});
+      setAlert({ message: "Failed to create Blockagotchi. Please try again.", type: 'error' });
     }
     setLoading(false);
   };
@@ -160,7 +195,8 @@ export default function Linkagotchi({ contract, account }) {
           message: "What? Your Blockagotchi is evolving!",
           type: 'evolution',
           spriteUrl: getBlockagotchiSprite(updatedBlockagotchi.race),
-          action: 'evolve'
+          action: 'evolve',
+          isShiny: updatedBlockagotchi.isShiny
         });
       } else {
         // Ação normal
@@ -168,7 +204,8 @@ export default function Linkagotchi({ contract, account }) {
           message: `Action ${actionType} performed successfully!`, 
           type: 'success',
           spriteUrl: getBlockagotchiSprite(updatedBlockagotchi.race),
-          action: actionType
+          action: actionType,
+          isShiny: updatedBlockagotchi.isShiny
         });
       }
     } catch (error) {
@@ -201,12 +238,12 @@ export default function Linkagotchi({ contract, account }) {
               <>
                 <h2 className="blockagotchi-name">{blockagotchi.name}</h2>
                 <div className="blockagotchi-sprite-container">
-                  <div 
-                    className={`blockagotchi-sprite ${animationState}`}
-                    style={{
-                      backgroundImage: `url(${getBlockagotchiSprite(blockagotchi.race)})`,
-                    }}
-                  />
+                <div className={`blockagotchi-sprite ${blockagotchi.isShiny ? 'shiny' : ''} ${animationState}`}
+  style={{
+    backgroundImage: `url(${getBlockagotchiSprite(blockagotchi.race)})`,
+  }}
+/>
+
                 </div>
                 <div className="linkagotchi-info">
                   <p>ID: {blockagotchi.id}</p>
@@ -243,12 +280,13 @@ export default function Linkagotchi({ contract, account }) {
             )}
             {alert && (
   <CustomAlert
-    message={alert.message}
-    type={alert.type}
-    spriteUrl={alert.spriteUrl}
-    action={alert.action}
-    onClose={() => setAlert(null)}
-  />
+  message={alert.message}
+  type={alert.type}
+  spriteUrl={alert.spriteUrl}
+  action={alert.action}
+  isShiny={blockagotchi?.isShiny}
+  onClose={() => setAlert(null)}
+/>
 )}
           </div>
         </div>
