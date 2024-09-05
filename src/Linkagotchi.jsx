@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import 'nes.css/css/nes.min.css';
-import blobSprite from '../src/assets/blockagotchis/Bird.png';
 import BlockagotchiRanking from './BlockagotchiRanking';
 import LoadingScreen from './loading-screen-component';
 import CustomAlert from './custom-alert-component';
