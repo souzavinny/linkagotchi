@@ -50,6 +50,7 @@ export default function Linkagotchi({ contract, account }) {
         console.log("RACA: " + updatedBlockagotchi.race + ", SHINY: " + updatedBlockagotchi.isShiny);
         setBlockagotchi(updatedBlockagotchi);
         setLoading(false);
+        setAnimationState('idle');
         return updatedBlockagotchi;
       } catch (error) {
         console.error("Failed to load active Blockagotchi:", error);
@@ -86,23 +87,6 @@ export default function Linkagotchi({ contract, account }) {
   const getStageString = (stage) => {
     const stages = ['Blob', 'Child', 'Teen', 'Adult', 'Old'];
     return stages[stage] || 'Unknown';
-  };
-
-  const getActionAnimation = (action) => {
-    switch (action) {
-      case 'feed':
-        return 'idle';
-      case 'walk':
-      case 'fly':
-      case 'run':
-        return 'move';
-      case 'climb':
-        return 'climb';
-      case 'bathe':
-        return 'bathe';
-      default:
-        return 'idle';
-    }
   };
 
   const createBlockagotchi = async () => {
@@ -244,6 +228,7 @@ export default function Linkagotchi({ contract, account }) {
                 <div className={`blockagotchi-sprite ${blockagotchi.isShiny ? 'shiny' : ''} ${animationState}`}
   style={{
     backgroundImage: `url(${getBlockagotchiSprite(blockagotchi.race)})`,
+    animation: 'custom-sprite-idle 1s steps(2) infinite'
   }}
 />
 
