@@ -4,6 +4,7 @@ import 'nes.css/css/nes.min.css';
 import BlockagotchiRanking from './BlockagotchiRanking';
 import LoadingScreen from './loading-screen-component';
 import CustomAlert from './custom-alert-component';
+import shinyMark from './assets/blockagotchis/shiny_mark.png';
 
 export default function Linkagotchi({ contract, account }) {
     const [blockagotchi, setBlockagotchi] = useState(null);
@@ -235,7 +236,10 @@ export default function Linkagotchi({ contract, account }) {
             
             {blockagotchi ? (
               <>
-                <h2 className="blockagotchi-name">{blockagotchi.name}</h2>
+                <h2 className="blockagotchi-name">
+                  {blockagotchi.name}
+                  {blockagotchi.isShiny && <img src={shinyMark} alt="Shiny" className="shiny-mark" />}
+                </h2>
                 <div className="blockagotchi-sprite-container">
                 <div className={`blockagotchi-sprite ${blockagotchi.isShiny ? 'shiny' : ''} ${animationState}`}
   style={{

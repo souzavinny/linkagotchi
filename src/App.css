@@ -190,3 +190,10 @@
 .blockagotchi-sprite.shiny {
   animation: custom-sprite-shiny 2s linear infinite;
 }
+
+.shiny-mark {
+  width: 32px;
+  height: 32px;
+  margin-left: 5px;
+  vertical-align: middle;
+}
