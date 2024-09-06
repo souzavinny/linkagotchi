@@ -1,4 +1,18 @@
-# Linkagotchi
+<div align="center">
+    <h1>Linkagotchi</h1>
+    <i>Blockagotchis on the chain</i>
+</div>
+<div align="center">
+  Since we are bringing everything on chain, let`s bring tamagotchis too. 
+</div>
+
+<div align="center">
+  
+  <a href="">[![Static Badge](https://img.shields.io/badge/chainlink--VRF-2.5-5bd1d7)](https://docs.chain.link/vrf)</a>
+  <a href="">[![Static Badge](https://img.shields.io/badge/solidity-green)](https://ethereum.org/en/developers/docs/)</a>
+  <a href="">[![Static Badge](https://img.shields.io/badge/react-green)](https://react.dev/)</a>
+</div>
+
 
 Linkagotchi is a blockchain-based virtual pet game inspired by the classic Tamagotchi. Raise and train with your unique digital creatures on the Ethereum blockchain!
 
