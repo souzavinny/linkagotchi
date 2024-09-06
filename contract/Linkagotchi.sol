@@ -26,7 +26,7 @@ contract Linkagotchi is ERC721, VRFConsumerBaseV2Plus {
     }
 
     uint256 public availableEggs = 100;
-    uint256 public nextBlockagotchiId;
+    uint256 public nextBlockagotchiId = 1;
 
     uint256 public s_subscriptionId;
     address public vrfCoordinator = 0x9DdfaCa8183c41ad55329BdeeD9F6A8d53168B1B;
@@ -56,7 +56,7 @@ contract Linkagotchi is ERC721, VRFConsumerBaseV2Plus {
     event ActionPerformed(uint256 indexed blockagotchiId, string actionType, uint256 newHappiness, uint256 newHealth);
 
     constructor(uint256 subscriptionId) 
-    ERC721("Blockagotchi", "BLKGTCHI")
+    ERC721("LBlockagotchi", "LBLKGTCHI")
     VRFConsumerBaseV2Plus(vrfCoordinator) 
 {
     s_subscriptionId = subscriptionId;
@@ -96,8 +96,8 @@ function fulfillRandomWords(uint256 requestId, uint256[] calldata randomWords) i
 
 function _createBlockagotchi(address user, uint256 requestId, uint256 randomNumber) internal {
     bool isShiny = (randomNumber == 1);
-    nextBlockagotchiId++;
     uint256 blockagotchiId = nextBlockagotchiId;
+    nextBlockagotchiId++;
 
     Blockagotchi storage blockagotchi = blockagotchis[blockagotchiId];
     blockagotchi.id = blockagotchiId;
@@ -179,18 +179,18 @@ function increaseHealth(uint256 blockagotchiId, uint256 amount) internal {
 function updateStage(uint256 blockagotchiId) internal {
     Blockagotchi storage blockagotchi = blockagotchis[blockagotchiId];
 
-    if (blockagotchi.stage == Stage.Blob && blockagotchi.experience >= 10) {
+    if (blockagotchi.stage == Stage.Blob && blockagotchi.experience >= 5) {
         blockagotchi.stage = Stage.Child;
         blockagotchi.race = determineRace(blockagotchiId);
         emit BlockagotchiEvolved(blockagotchiId, Stage.Child);
-    } else if (blockagotchi.stage == Stage.Child && blockagotchi.experience >= 20) {
+    } else if (blockagotchi.stage == Stage.Child && blockagotchi.experience >= 10) {
         blockagotchi.stage = Stage.Teen;
         emit BlockagotchiEvolved(blockagotchiId, Stage.Teen);
-    } else if (blockagotchi.stage == Stage.Teen && blockagotchi.experience >= 30) {
+    } else if (blockagotchi.stage == Stage.Teen && blockagotchi.experience >= 25) {
         blockagotchi.stage = Stage.Adult;
         blockagotchi.race = evolveRace(blockagotchi.race);
         emit BlockagotchiEvolved(blockagotchiId, Stage.Adult);
-    } else if (blockagotchi.stage == Stage.Adult && blockagotchi.experience >= 40) {
+    } else if (blockagotchi.stage == Stage.Adult && blockagotchi.experience >= 100) {
         blockagotchi.stage = Stage.Old;
         emit BlockagotchiEvolved(blockagotchiId, Stage.Old);
     }
