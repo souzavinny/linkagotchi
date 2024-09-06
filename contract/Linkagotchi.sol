@@ -223,51 +223,29 @@ function evolveRace(Race race) internal pure returns (Race) {
 }
 
 function updateRanking(uint256 blockagotchiId) internal {
-    uint256 score = calculateScore(blockagotchiId);
-    uint256 currentIndex = type(uint256).max;
-    uint256 newIndex = leaderboard.length;
+    // Remove o Blockagotchi da leaderboard se ele já estiver nela
+    removeFromLeaderboard(blockagotchiId);
 
-    // Primeiro, encontre a posição atual (se existir) e a nova posição
+    // Recalcula o score
+    uint256 score = calculateScore(blockagotchiId);
+
+    // Adiciona o Blockagotchi de volta à leaderboard na posição correta
+    bool added = false;
     for (uint256 i = 0; i < leaderboard.length; i++) {
-        if (leaderboard[i] == blockagotchiId) {
-            currentIndex = i;
-        }
-        if (score > calculateScore(leaderboard[i]) && i < newIndex) {
-            newIndex = i;
-        }
-        if (currentIndex != type(uint256).max && newIndex < leaderboard.length) {
-            break; // Encontramos ambas as posições, podemos parar de procurar
+        if (score > calculateScore(leaderboard[i])) {
+            leaderboard.push(leaderboard[leaderboard.length - 1]);
+            for (uint256 j = leaderboard.length - 2; j > i; j--) {
+                leaderboard[j + 1] = leaderboard[j];
+            }
+            leaderboard[i] = blockagotchiId;
+            added = true;
+            break;
         }
     }
 
-    // Se o Blockagotchi já está na leaderboard
-    if (currentIndex != type(uint256).max) {
-        // Se a nova posição é diferente da atual, reordene
-        if (newIndex != currentIndex) {
-            // Remove da posição atual
-            for (uint256 i = currentIndex; i < leaderboard.length - 1; i++) {
-                leaderboard[i] = leaderboard[i + 1];
-            }
-            leaderboard.pop();
-
-            // Insere na nova posição
-            leaderboard.push(blockagotchiId);
-            for (uint256 i = leaderboard.length - 1; i > newIndex; i--) {
-                leaderboard[i] = leaderboard[i - 1];
-            }
-            leaderboard[newIndex] = blockagotchiId;
-        }
-    } else {
-        // Se o Blockagotchi não está na leaderboard, adicione-o
-        if (newIndex == leaderboard.length) {
-            leaderboard.push(blockagotchiId);
-        } else {
-            leaderboard.push(leaderboard[leaderboard.length - 1]);
-            for (uint256 i = leaderboard.length - 1; i > newIndex; i--) {
-                leaderboard[i] = leaderboard[i - 1];
-            }
-            leaderboard[newIndex] = blockagotchiId;
-        }
+    // Se o Blockagotchi tiver a menor pontuação, ele vai para o final
+    if (!added) {
+        leaderboard.push(blockagotchiId);
     }
 }
 

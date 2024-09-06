@@ -1,4 +1,4 @@
-export const contractAddress = '0xaacdd4ea30c62b1032c9f3369b5bb2f2ace48755';
+export const contractAddress = '0x08900b521740c4e8409ffc95b70ab77a778fef1c';
 export const contractABI = [
 	{
 		"inputs": [],
