@@ -6,6 +6,15 @@ import LoadingScreen from './loading-screen-component';
 import CustomAlert from './custom-alert-component';
 import shinyMark from './assets/blockagotchis/shiny_mark.png';
 
+import blobSprite from './assets/blockagotchis/blobSprite.png';
+import birdSprite from './assets/blockagotchis/Bird.png';
+import dogSprite from './assets/blockagotchis/Dog.png';
+import catSprite from './assets/blockagotchis/Cat.png';
+import duckSprite from './assets/blockagotchis/Duck.png';
+import wolfSprite from './assets/blockagotchis/Wolf.png';
+import tigerSprite from './assets/blockagotchis/Tiger.png';
+import lionSprite from './assets/blockagotchis/Lion.png';
+
 export default function Linkagotchi({ contract, account }) {
   const [blockagotchi, setBlockagotchi] = useState(null);
   const [newBlockagotchiName, setNewBlockagotchiName] = useState('');
@@ -71,17 +80,17 @@ export default function Linkagotchi({ contract, account }) {
   const getBlockagotchiSprite = (race) => {
     console.log(race);
     const raceSprites = {
-      0: 'blobSprite.png',
-      1: 'Bird.png',
-      2: 'Dog.png',
-      3: 'Cat.png',
-      4: 'Duck.png',
-      5: 'Wolf.png',
-      6: 'Tiger.png',
-      7: 'Lion.png'
+      0: blobSprite,
+      1: birdSprite,
+      2: dogSprite,
+      3: catSprite,
+      4: duckSprite,
+      5: wolfSprite,
+      6: tigerSprite,
+      7: lionSprite
     };
 
-    return `/src/assets/blockagotchis/${raceSprites[race] || 'blobSprite.png'}`;
+    return raceSprites[race] || blobSprite;
   };
 
   const getStageString = (stage) => {
