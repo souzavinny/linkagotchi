@@ -173,7 +173,7 @@ export default function Linkagotchi({ contract, account }) {
         return;
       }
 
-      if (updatedBlockagotchi.stage !== blockagotchi.stage || updatedBlockagotchi.race !== blockagotchi.race) {
+      if (updatedBlockagotchi.race !== blockagotchi.race) {
         // Blockagotchi evoluiu
         setAlert({
           message: "Congratulations! Your Blockagotchi evolved!",
