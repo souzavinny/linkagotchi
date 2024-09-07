@@ -219,7 +219,7 @@ export default function Linkagotchi({ contract, account }) {
         <BlockagotchiRanking contract={contract} onClose={() => setShowRanking(false)} />
       ) : (
         <div className="nes-container with-title is-centered">
-          <p className="title">Linkagotchi</p>
+          <p className="title">Blockagotchi</p>
           <div className="nes-container is-rounded">
             <div className="linkagotchi-menu">
               <button className="nes-btn is-primary" onClick={() => setShowRanking(true)}>Ranking</button>
@@ -237,7 +237,7 @@ export default function Linkagotchi({ contract, account }) {
                   <div className={`blockagotchi-sprite ${blockagotchi.isShiny ? 'shiny' : ''} ${animationState}`}
                     style={{
                       backgroundImage: `url(${getBlockagotchiSprite(blockagotchi.race)})`,
-                      animation: 'custom-sprite-idle 1s steps(2) infinite'
+                      animation: !blockagotchi.isShiny ? 'custom-sprite-idle 1s steps(2) infinite' : 'custom-sprite-shiny 2s linear infinite'
                     }}
                   />
 
